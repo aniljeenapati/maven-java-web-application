@@ -1,0 +1,90 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'jenkins-maven'
+    }
+
+    environment {
+        DOCKER_IMAGE = 'aniljeenapati/demo:latest' // Docker image name
+        // Credentials environment variables
+        DOCKERHUB_CREDENTIALS = credentials('jenkins-docker')
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo 'Checking out code from GitHub...'
+                git url: 'https://github.com/aniljeenapati/maven-java-web-application.git', branch: 'master'
+            }
+        }
+
+        stage('Build Maven Project') {
+            steps {
+                echo 'Building the Maven project...'
+                dir('sampleWebApp') {
+                    sh 'mvn clean package'
+                }
+            }
+            post {
+                success {
+                    echo 'Maven build succeeded.'
+                    archiveArtifacts artifacts: 'sampleWebApp/target/*.war', allowEmptyArchive: true
+                }
+                failure {
+                    echo 'Maven build failed.'
+                    error('Stopping the pipeline due to build failure.')
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker image...'
+                dir('sampleWebApp') {
+                    sh "docker build -t ${DOCKER_IMAGE} ."
+                }
+            }
+            post {
+                success {
+                    echo 'Docker image build succeeded.'
+                }
+                failure {
+                    echo 'Docker image build failed.'
+                    error('Stopping the pipeline due to Docker build failure.')
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                echo 'Pushing Docker image to Docker Hub...'
+                sh """
+                echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
+                docker push ${DOCKER_IMAGE}
+                """
+            }
+            post {
+                success {
+                    echo 'Docker image pushed to Docker Hub successfully.'
+                }
+                failure {
+                    echo 'Docker push failed.'
+                    error('Stopping the pipeline due to push failure.')
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs() // Clean up the workspace after the pipeline completes
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
