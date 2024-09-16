@@ -43,9 +43,7 @@ resource "google_compute_instance_template" "instance_template" {
   disk {
     auto_delete = true
     boot        = true
-    initialize_params {
-      image = var.image  # Boot disk image
-    }
+    source_image = var.image  # Boot disk image
   }
   network_interface {
     network = "default"
