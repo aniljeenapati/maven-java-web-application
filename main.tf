@@ -59,7 +59,7 @@ resource "google_compute_autoscaler" "autoscaler" {
   target = google_compute_instance_group_manager.node_pool_mig.id
 
   autoscaling_policy {
-    min_num_replicas = var.min_replicas
-    max_num_replicas = var.max_replicas
+    min_replicas = var.min_replicas
+    max_replicas = var.max_replicas
   }
 }
