@@ -1,6 +1,6 @@
 # terraform.tfvars
-credentials_file_path = "/path/to/key.json"
-project_id            = "my-gcp-project-id"
+credentials_file_path = "key.json"
+project_id            = "kube-435112"
 region                = "us-central1"
 zone                  = "us-central1-a"
 cluster_name          = "my-cluster"
