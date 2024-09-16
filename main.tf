@@ -40,9 +40,8 @@ resource "google_compute_instance_group_manager" "node_pool_mig" {
 resource "google_compute_instance_template" "instance_template" {
   name_prefix = "${var.cluster_name}-template"
   machine_type = var.machine_type
-  disk {
+  boot_disk {
     auto_delete      = true
-    boot             = true
     initialize_params {
       image = var.image  # Image to initialize the boot disk
     }
