@@ -2,7 +2,7 @@
 credentials_file_path = "key.json"
 project_id            = "kube-435112"
 region                = "us-central1"
-zone                  = "us-central1-a"
+zone                  = "us-central1-b"
 cluster_name          = "my-cluster"
 machine_type          = "n1-standard-1"
 disk_size_gb          = 100
