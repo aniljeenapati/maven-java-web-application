@@ -2,14 +2,12 @@ resource "google_container_cluster" "primary" {
   name     = var.cluster_name
   location = var.region
 
-  initial_node_count = var.node_count
+  remove_default_node_pool = true
+  min_master_version       = "1.21.9-gke.2100"  // Adjust as needed
 
   node_config {
     machine_type = var.node_machine_type
   }
-
-  remove_default_node_pool = true
-  min_master_version       = "1.21.9-gke.2100"  // Adjust as needed
 }
 
 resource "google_container_node_pool" "primary_nodes" {
@@ -22,9 +20,10 @@ resource "google_container_node_pool" "primary_nodes" {
     machine_type = var.node_machine_type
   }
 }
+
 output "kubeconfig" {
   description = "The kubeconfig file contents"
-  value       = google_container_cluster.primary.kube_config_raw
+  value       = google_container_cluster.primary.endpoint
 }
 
 output "cluster_name" {
