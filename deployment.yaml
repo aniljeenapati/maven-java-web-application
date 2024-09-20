@@ -20,8 +20,6 @@ spec:
         ports:
         - containerPort: 8080  # Change this to the port your application listens on
         env:
-        - name: ENV_VAR_NAME  # Add environment variables here if needed
-          value: "value"
 ---
 apiVersion: v1
 kind: Service
