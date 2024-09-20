@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-app
+  name: demo-app_deployment
   labels:
     app: demo-app
 spec:
@@ -19,7 +19,6 @@ spec:
         image: aniljeenapati/demo:latest
         ports:
         - containerPort: 8080  # Change this to the port your application listens on
-        env:
 ---
 apiVersion: v1
 kind: Service
